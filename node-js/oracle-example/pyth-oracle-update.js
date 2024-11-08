@@ -1,14 +1,20 @@
-const { functionCall } = require('@near-js/client');
-const { nearConnect } = require('../utils/connect');
+// Hermes API client SDK by Pyth
+// https://www.npmjs.com/package/@pythnetwork/hermes-client
 const { HermesClient } = require('@pythnetwork/hermes-client');
+
+// near.js imports
+// https://www.npmjs.com/package/@near-js/client
+const { nearConnect } = require('../utils/connect');
+const { functionCall } = require('@near-js/client');
 
 const sender = 'your-account.testnet';
 const receiver = 'pyth-oracle.testnet';
 
 const priceIds = [
   // You can find the ids of prices at https://pyth.network/developers/price-feed-ids
-  '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43', // BTC/USD price id
-  '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace', // ETH/USD price id
+  // NOTE: Remove the '0x' prefix before using them
+  'e62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43', // BTC/USD price id
+  'ff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace', // ETH/USD price id
 ];
 
 async function updatePriceFeeds() {
@@ -29,10 +35,7 @@ async function updatePriceFeeds() {
   });
 
   console.log(result);
-  console.log(
-    'View Transaction -> ' +
-      `https://testnet.nearblocks.io/txns/${result.outcome.transaction.hash}`
-  );
+  console.log(`Transaction -> https://testnet.nearblocks.io/txns/${result.outcome.transaction.hash}`);
   return result;
 }
 
