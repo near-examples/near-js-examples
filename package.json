@@ -7,6 +7,8 @@
   "license": "MIT",
   "dependencies": {
     "@near-js/client": "^0.0.2",
-    "@near-js/keystores-node": "^0.1.1"
+    "@near-js/keystores-node": "^0.1.1",
+    "@pythnetwork/hermes-client": "^1.1.0",
+    "@pythnetwork/price-service-client": "^1.9.0"
   }
 }

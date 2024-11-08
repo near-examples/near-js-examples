@@ -1,48 +1,20 @@
-const { join } = require('node:path');
-const { homedir } = require('node:os');
-const {
-  getSignerFromKeystore,
-  getTestnetRpcProvider,
-  functionCall,
-} = require('@near-js/client');
-const { UnencryptedFileSystemKeyStore } = require('@near-js/keystores-node');
+const { nearConnect } = require('./utils/connect');
+const { functionCall } = require('@near-js/client');
 
-const CONFIG = {
-  sender: 'your-account.testnet',
-  receiver: 'guestbook.near-examples.testnet',
-  method: 'add_message',
-  network: 'testnet',
-  credentialsPath: join(homedir(), '.near-credentials'),
-};
-
-const initNearConnection = () => ({
-  rpcProvider: getTestnetRpcProvider(),
-  signer: getSignerFromKeystore(
-    CONFIG.sender,
-    CONFIG.network,
-    new UnencryptedFileSystemKeyStore(CONFIG.credentialsPath)
-  ),
-});
+const sender = 'your-account.testnet';
+const receiver = 'guestbook.near-examples.testnet';
 
 async function addMessage(message) {
-  const { rpcProvider, signer } = initNearConnection();
+  const { rpcProvider, signer } = nearConnect(sender, 'testnet');
 
-  const result = await functionCall({
-    sender: CONFIG.sender,
-    receiver: CONFIG.receiver,
-    method: CONFIG.method,
+  return await functionCall({
+    sender,
+    receiver,
+    method: 'add_message',
     args: { text: message },
     deposit: 1n,
     deps: { rpcProvider, signer },
   });
-
-  console.log('Message added successfully', result);
-  console.log('View Transaction -> ' +`https://testnet.nearblocks.io/txns/${result.outcome.transaction.hash}`);
-  console.log('View live result -> https://near-examples.github.io/guest-book-examples')
-  return result;
 }
-addMessage('Hey there! Is this thing on?');
 
-
-
-
+addMessage('Hey there! Is this thing on, again?');
