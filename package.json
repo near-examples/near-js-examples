@@ -1,0 +1,12 @@
+{
+  "name": "near-js-examples",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/near-examples/near-js-examples.git",
+  "author": "Josh <thisisjoshford@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@near-js/client": "^0.0.2",
+    "@near-js/keystores-node": "^0.1.1"
+  }
+}
