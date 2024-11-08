@@ -38,9 +38,11 @@ async function addMessage(message) {
 
   console.log('Message added successfully', result);
   console.log('View Transaction -> ' +`https://testnet.nearblocks.io/txns/${result.outcome.transaction.hash}`);
+  console.log('View live result -> https://near-examples.github.io/guest-book-examples')
   return result;
 }
 addMessage('Hey there! Is this thing on?');
 
-// View live result here https://near-examples.github.io/guest-book-examples/
-// View transaction here https://testnet.nearblocks.io/<your-account> or <your-transaction-hash>
+
+
+
