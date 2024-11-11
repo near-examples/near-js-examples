@@ -1,6 +1,9 @@
+// Hermes API client SDK by Pyth
+// https://www.npmjs.com/package/@pythnetwork/hermes-client
+const { HermesClient } = require('@pythnetwork/hermes-client');
+
 // near.js imports
 // https://www.npmjs.com/package/@near-js/client
-const axios = require('axios');
 const { nearConnect } = require('../utils/connect');
 const { functionCall } = require('@near-js/client');
 
@@ -14,21 +17,13 @@ const priceIds = [
   'ff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace', // ETH/USD price id
 ];
 
-async function getData(priceId, publishTime) {
-  try {
-    const response = await axios.get(`https://hermes.pyth.network/api/get_vaa?id=${priceId}&publish_time=${publishTime}`);
-    const formattedData = Buffer.from(response.data.vaa, "base64").toString("hex");
-    return formattedData;
-  } catch (error) {
-    console.error('Error:', error.response ? error.response.data : error.message);
-  }
-}
 async function updatePriceFeeds() {
+  const hermes = new HermesClient('https://hermes.pyth.network', {});
   const { rpcProvider, signer } = nearConnect(sender, 'testnet');
 
-  const publishTime = Math.floor(Date.now() / 1000)-1;
-  const data = await getData(priceIds[0], publishTime);
-  console.log(data)
+  // Latest price updates
+  const priceUpdates = (await hermes.getLatestPriceUpdates(priceIds));
+  const data = priceUpdates.binary.data.toString();
 
   const result = await functionCall({
     sender,
@@ -39,9 +34,8 @@ async function updatePriceFeeds() {
     deps: { rpcProvider, signer },
   });
 
-  console.log(
-    `Transaction -> https://testnet.nearblocks.io/txns/${result.outcome.transaction.hash}`
-  );
+  console.log(result);
+  console.log(`Transaction -> https://testnet.nearblocks.io/txns/${result.outcome.transaction.hash}`);
   return result;
 }
 
