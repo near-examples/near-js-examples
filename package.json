@@ -11,5 +11,9 @@
     "@pythnetwork/hermes-client": "^1.1.0",
     "@pythnetwork/price-service-client": "^1.9.0",
     "got": "^14.4.4"
+  },
+  "scripts": {
+    "update-oracle": "node node-js/oracle-example/pyth-oracle-update.js",
+    "get-price": "node node-js/oracle-example/pyth-oracle-view.js"
   }
 }

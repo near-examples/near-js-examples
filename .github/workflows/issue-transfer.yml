@@ -1,29 +1,23 @@
-name: Transfer New Issue or PR to DevRel Project Tracking
+name: Transfer New Issue to DevRel Project Tracking
 
 on:
   issues:
-    types: [opened]
-  pull_request:
     types: [opened]
 
 jobs:
   transfer:
     runs-on: ubuntu-latest
     steps:
-      - name: Transfer Issue or PR
+      - name: Transfer Issue
         uses: actions/github-script@v5
         with:
           github-token: ${{secrets.GH_TOKEN}}
           script: |
-            // Determine if this is an issue or PR and get the relevant data
-            const item = context.payload.issue || context.payload.pull_request;
-            const itemTitle = item.title;
-            const itemBody = item.body;
-            const itemNumber = item.number;
-            
+            const issueTitle = context.payload.issue.title;
+            const issueBody = context.payload.issue.body;
+            const issueNumber = context.payload.issue.number;
             const organizationName = 'near';
             const projectName = 'DevRel';
-            
             // Fetch project ID and other necessary IDs
             const query = `
               query {
@@ -36,8 +30,7 @@ jobs:
             `;
             const projectIdResponse = await github.graphql(query);
             const projectId = projectIdResponse.organization.projectV2.id;
-            
-            // Add item to the project
+            // Add issue to the project
             const mutation = `
               mutation($projectId: ID!, $contentId: ID!) {
                 addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
@@ -47,7 +40,4 @@ jobs:
                 }
               }
             `;
-            await github.graphql(mutation, { 
-              projectId: projectId, 
-              contentId: item.node_id 
-            });
+            await github.graphql(mutation, { projectId: projectId, contentId: context.payload.issue.node_id });
